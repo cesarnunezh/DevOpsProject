@@ -1,0 +1,82 @@
+services:
+
+  web-dev:
+    build:
+      context: frontend-service
+      target: dev
+    image: cesarnunezh/frontend-service:dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-service:/app
+      - /app/node_modules
+    env_file: .env
+    profiles:
+      - dev
+
+  web:
+    build:
+      context: frontend-service
+      target: production
+    image: cesarnunezh/frontend-service:prod
+    ports:
+      - "3000:80"
+    env_file: .env
+    profiles:
+      - prod
+
+  database:
+    build:
+      context: database
+      target: database
+    image: cesarnunezh/database-service:latest
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d database"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app-network
+
+  orders-api:
+    build: 
+      context: order-service
+      target: runtime
+    image: cesarnunezh/orders-api:latest
+    ports:
+      - "8050:8050"
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  products-api:
+    build: 
+      context: product-service
+      target: runtime
+    image: cesarnunezh/products-api:latest
+    ports:
+      - "8070:8070"
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  postgres_data:

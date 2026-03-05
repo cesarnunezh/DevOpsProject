@@ -1,0 +1,6 @@
+.vscode/
+.env
+database/
+frontend-service/
+order-service/
+product-service/
