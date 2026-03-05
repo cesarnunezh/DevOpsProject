@@ -19,9 +19,9 @@ This repository is the orchestration layer used to run, test, secure, and publis
 ```mermaid
 flowchart LR
   U[User Browser] --> FE[frontend-service]
-  FE --> P[products-api]
+  FE <--> P[products-api]
   FE --> O[orders-api]
-  P --> DB[(PostgreSQL)]
+  P <--> DB[(PostgreSQL)]
   O --> DB
 ```
 
