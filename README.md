@@ -27,16 +27,10 @@ flowchart LR
 
 ## Repositories
 This project is split into multiple repos:
-- `frontend-service`
-- `order-service`
-- `product-service`
-- `database`
-
-Source repositories:
-- https://github.com/cesarnunezh/frontend-service
-- https://github.com/cesarnunezh/order-service
-- https://github.com/cesarnunezh/product-service
-- https://github.com/cesarnunezh/database
+- `frontend-service`: https://github.com/cesarnunezh/frontend-service
+- `order-service`: https://github.com/cesarnunezh/order-service
+- `product-service`: https://github.com/cesarnunezh/product-service
+- `database`: https://github.com/cesarnunezh/database
 
 ## Quick Start
 ### 1) Clone this orchestration repo
@@ -78,10 +72,10 @@ make clean ENV=dev
   - https://hub.docker.com/repository/docker/cesarnunezh/orders-api/general
   - https://hub.docker.com/repository/docker/cesarnunezh/products-api/general
 - Security scan reports:
-  - `./security-reports/database-service.trivy.txt`
-  - `./security-reports/frontend-service.trivy.txt`
-  - `./security-reports/orders-api.trivy.txt`
-  - `./security-reports/products-api.trivy.txt`
+  - [`./security-reports/database-service.trivy.txt`](./security-reports/database-service.trivy.txt)
+  - [`./security-reports/frontend-service.trivy.txt`](./security-reports/frontend-service.trivy.txt)
+  - [`./security-reports/orders-api.trivy.txt`](./security-reports/orders-api.trivy.txt)
+  - [`./security-reports/products-api.trivy.txt`](./security-reports/products-api.trivy.txt)
 
 ## Additional Documentation
 - Full project notes and phase deliverables: `./homework.md`
