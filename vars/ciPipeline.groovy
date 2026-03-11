@@ -81,6 +81,14 @@ def call(Map cfg = [:]) {
                 }
             }
 
+            stage('Debug Env') {
+                steps {
+                    echo "BRANCH_NAME=${env.BRANCH_NAME}"
+                    echo "PIPELINE_ENV=${env.PIPELINE_ENV}"
+                    echo "enableDeploy=${enableDeploy}"
+                }
+            }
+
             stage('Prod Approval') {
             when {
                 expression { return enableDeploy && env.PIPELINE_ENV == 'prod' }
