@@ -1,6 +1,6 @@
 def call(Map cfg = [:]) {
-    boolean enableDeploy = (cfg.enableDeploy == true)
-
+    boolean enableDeploy = (cfg.enableDeploy == true) || env.BRANCH_NAME == 'main'
+    
     if (enableDeploy && !cfg.deployRepo) {
         error("deployRepo is required when enableDeploy=true")
     }
