@@ -17,9 +17,10 @@ def call(Map cfg = [:]) {
                         env.PIPELINE_ENV = ctx.pipelineEnv
                         env.IS_PR = ctx.isPr.toString()
                         env.BRANCH_NAME = ctx.branchName
+                        env.JENKINS_RUNTIME_ENV = ctx.runtimeEnv ?: ""
                         env.MANUAL_PROD_DEPLOY = (cfg.enableDeploy == true).toString()
 
-                        echo "Environment: env=${env.PIPELINE_ENV}, isPR=${env.IS_PR}, branch=${env.BRANCH_NAME}, manualProdDeploy=${env.MANUAL_PROD_DEPLOY}"
+                        echo "Environment: env=${env.PIPELINE_ENV}, runtimeEnv=${env.JENKINS_RUNTIME_ENV}, isPR=${env.IS_PR}, branch=${env.BRANCH_NAME}, manualProdDeploy=${env.MANUAL_PROD_DEPLOY}"
                     }
                 }
             }
@@ -69,6 +70,7 @@ def call(Map cfg = [:]) {
                     script {
                         def imageMeta = buildImage(cfg + [pipelineEnv: env.PIPELINE_ENV])
                         env.IMAGE_TAG = imageMeta.immutableTag
+                        env.MUTABLE_TAG = imageMeta.mutableTag ?: ""
                         env.IMAGE_URI = imageMeta.imageUri
                         env.VERSION_TAG = imageMeta.versionTag ?: ""
                         echo "Built image: ${env.IMAGE_URI}"
@@ -86,6 +88,7 @@ def call(Map cfg = [:]) {
                             dockerRepo : cfg.dockerRepo,
                             imageUri   : env.IMAGE_URI,
                             imageTag   : env.IMAGE_TAG,
+                            mutableTag : env.MUTABLE_TAG,
                             versionTag : env.VERSION_TAG,
                             pipelineEnv: env.PIPELINE_ENV,
                         ])
@@ -122,7 +125,9 @@ def call(Map cfg = [:]) {
                             deployRepo : cfg.deployRepo,
                             pipelineEnv: env.PIPELINE_ENV,
                             imageUri   : env.IMAGE_URI,
-                            imageTag   : env.IMAGE_TAG
+                            imageTag   : env.IMAGE_TAG,
+                            mutableTag : env.MUTABLE_TAG,
+                            versionTag : env.VERSION_TAG
                         ])
                     }
                 }

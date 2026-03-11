@@ -1,0 +1,100 @@
+{
+  "docker_network_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "devops-dev-network"
+  },
+  "docker_registry_namespace": {
+    "sensitive": false,
+    "type": "string",
+    "value": "cesarnunezh"
+  },
+  "environment": {
+    "sensitive": false,
+    "type": "string",
+    "value": "dev"
+  },
+  "image_repository_prefix": {
+    "sensitive": false,
+    "type": "string",
+    "value": "cesarnunezh"
+  },
+  "jenkins_port": {
+    "sensitive": false,
+    "type": "number",
+    "value": 8080
+  },
+  "jenkins_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "http://127.0.0.1:8080"
+  },
+  "kubernetes_namespace": {
+    "sensitive": false,
+    "type": "string",
+    "value": "dev"
+  },
+  "minikube_cluster_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.58.2"
+  },
+  "minikube_kubeconfig_context": {
+    "sensitive": false,
+    "type": "string",
+    "value": "devops-dev-minikube"
+  },
+  "minikube_kubeconfig_path": {
+    "sensitive": false,
+    "type": "string",
+    "value": "/home/canun/.kube/config"
+  },
+  "minikube_profile": {
+    "sensitive": false,
+    "type": "string",
+    "value": "devops-dev-minikube"
+  },
+  "name_prefix": {
+    "sensitive": false,
+    "type": "string",
+    "value": "devops-dev"
+  },
+  "postgres_connection_string": {
+    "sensitive": true,
+    "type": "string",
+    "value": "postgresql://postgres:mysecretpassword@127.0.0.1:5432/database"
+  },
+  "postgres_db": {
+    "sensitive": false,
+    "type": "string",
+    "value": "database"
+  },
+  "postgres_host": {
+    "sensitive": false,
+    "type": "string",
+    "value": "127.0.0.1"
+  },
+  "postgres_port": {
+    "sensitive": false,
+    "type": "number",
+    "value": 5432
+  },
+  "service_base_urls": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "frontend": "string",
+        "jenkins": "string",
+        "orders": "string",
+        "products": "string"
+      }
+    ],
+    "value": {
+      "frontend": "http://localhost:3000",
+      "jenkins": "http://127.0.0.1:8080",
+      "orders": "http://localhost:8050",
+      "products": "http://localhost:8070"
+    }
+  }
+}

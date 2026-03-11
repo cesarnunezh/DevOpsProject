@@ -1,4 +1,8 @@
 def call(Map cfg = [:]) {
+    Map versionConfig = loadVersionConfig()
+    String mutableTagSuffix = (versionConfig.cicd?.mutable_tag_suffix ?: "latest").trim()
+    String mutableTag = (cfg.mutableTag ?: (cfg.pipelineEnv ? "${cfg.pipelineEnv}-${mutableTagSuffix}" : "")).trim()
+
     withCredentials([usernamePassword(
         credentialsId: 'final_project',
         usernameVariable: 'DOCKER_USER',
@@ -10,7 +14,9 @@ def call(Map cfg = [:]) {
 
             try {
                 sh "docker push ${cfg.imageUri}"
-                sh "docker push ${cfg.dockerRepo}:${cfg.pipelineEnv}-latest"
+                if (mutableTag) {
+                    sh "docker push ${cfg.dockerRepo}:${mutableTag}"
+                }
                 if (cfg.versionTag?.trim()) {
                     sh "docker push ${cfg.dockerRepo}:${cfg.versionTag}"
                 }

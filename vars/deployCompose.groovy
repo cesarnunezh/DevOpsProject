@@ -11,6 +11,8 @@ def call(Map cfg = [:]) {
         withEnv([
             "IMAGE_URI=${cfg.imageUri}",
             "IMAGE_TAG=${cfg.imageTag}",
+            "MUTABLE_TAG=${cfg.mutableTag ?: ''}",
+            "VERSION_TAG=${cfg.versionTag ?: ''}",
             "ENV=${cfg.pipelineEnv}"
         ]) {
             sh """

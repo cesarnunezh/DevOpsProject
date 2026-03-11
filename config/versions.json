@@ -1,0 +1,10 @@
+{
+  "infra": {
+    "jenkins_image": "jenkins/jenkins:lts-jdk21",
+    "minikube_kubernetes_version": "v1.32.0"
+  },
+  "cicd": {
+    "mutable_tag_suffix": "latest",
+    "release_tag_prefix": "v"
+  }
+}

@@ -4,3 +4,7 @@ database/
 frontend-service/
 order-service/
 product-service/
+*terraform.tfvars
+*.tfstate
+*.tfstate.backup
+*.terraform/

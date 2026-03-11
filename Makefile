@@ -12,6 +12,12 @@ help:
 	@echo "make test                 Run tests"
 	@echo "make push ENV=prod        Push images to Docker Hub"
 	@echo "make clean                Remove containers and volumes"
+	@echo "make infra-dev            Create/apply Terraform dev infrastructure"
+	@echo "make infra-staging        Create/apply Terraform staging infrastructure"
+	@echo "make infra-prod           Create/apply Terraform prod infrastructure"
+	@echo "make infra-destroy-dev    Destroy Terraform dev infrastructure"
+	@echo "make infra-destroy-staging Destroy Terraform staging infrastructure"
+	@echo "make infra-destroy-prod   Destroy Terraform prod infrastructure"
 
 # -----------------------------
 # Variables
@@ -20,6 +26,7 @@ COMPOSE = docker compose
 PROFILE = --profile $(ENV)
 REPO_OWNER = cesarnunezh
 SERVICES = frontend-service order-service product-service database
+TERRAFORM_DIR = terraform
 
 # -----------------------------
 # Clone service repos
@@ -114,3 +121,30 @@ scan:
 			--output security-reports/$${name}.trivy.txt; \
 		echo "Scan completed for $$image"; \
 	done
+
+# -----------------------------
+# Terraform infrastructure
+# -----------------------------
+infra-dev:
+	@echo "Applying Terraform infrastructure for dev..."
+	cd $(TERRAFORM_DIR) && terraform init && terraform workspace select -or-create dev && terraform apply -auto-approve -var-file=env/dev.tfvars
+
+infra-staging:
+	@echo "Applying Terraform infrastructure for staging..."
+	cd $(TERRAFORM_DIR) && terraform init && terraform workspace select -or-create staging && terraform apply -auto-approve -var-file=env/staging.tfvars
+
+infra-prod:
+	@echo "Applying Terraform infrastructure for prod..."
+	cd $(TERRAFORM_DIR) && terraform init && terraform workspace select -or-create prod && terraform apply -auto-approve -var-file=env/prod.tfvars
+
+infra-destroy-dev:
+	@echo "Destroying Terraform infrastructure for dev..."
+	cd $(TERRAFORM_DIR) && terraform init && terraform workspace select -or-create dev && terraform destroy -auto-approve -var-file=env/dev.tfvars
+
+infra-destroy-staging:
+	@echo "Destroying Terraform infrastructure for staging..."
+	cd $(TERRAFORM_DIR) && terraform init && terraform workspace select -or-create staging && terraform destroy -auto-approve -var-file=env/staging.tfvars
+
+infra-destroy-prod:
+	@echo "Destroying Terraform infrastructure for prod..."
+	cd $(TERRAFORM_DIR) && terraform init && terraform workspace select -or-create prod && terraform destroy -auto-approve -var-file=env/prod.tfvars

@@ -1,0 +1,8 @@
+# Example local backend configuration.
+# The local backend stores workspace state files under terraform.tfstate.d/.
+# Native state locking is not available with the local backend.
+#
+# Usage:
+# terraform init -backend-config=backend.hcl.example
+
+path = "terraform.tfstate"
