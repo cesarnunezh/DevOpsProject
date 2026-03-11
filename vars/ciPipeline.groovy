@@ -1,16 +1,6 @@
 def call(Map cfg = [:]) {
-    boolean enableDeploy = (cfg.enableDeploy == true) || env.BRANCH_NAME == 'main'
+    boolean enableDeploy = (cfg.enableDeploy == true)
     
-    if (enableDeploy && !cfg.deployRepo) {
-        error("deployRepo is required when enableDeploy=true")
-    }
-    if (!cfg.dockerRepo) {
-        error("dockerRepo is required")
-    }
-    if (!cfg.localImageName) {
-        error("localImageName is required")
-    }
-
     pipeline {
         agent any
         stages {
@@ -27,10 +17,32 @@ def call(Map cfg = [:]) {
                         env.PIPELINE_ENV = ctx.pipelineEnv
                         env.IS_PR = ctx.isPr.toString()
                         env.BRANCH_NAME = ctx.branchName
-                        echo "Environment: env=${env.PIPELINE_ENV}, isPR=${env.IS_PR}, branch=${env.BRANCH_NAME}"
+                        env.MANUAL_PROD_DEPLOY = (cfg.enableDeploy == true).toString()
+
+                        echo "Environment: env=${env.PIPELINE_ENV}, isPR=${env.IS_PR}, branch=${env.BRANCH_NAME}, manualProdDeploy=${env.MANUAL_PROD_DEPLOY}"
                     }
                 }
             }
+
+            stage('Validate Config') {
+                steps {
+                    script {
+                        if (!cfg.dockerRepo) {
+                            error("dockerRepo is required")
+                        }
+                        if (!cfg.localImageName) {
+                            error("localImageName is required")
+                        }
+                        if (env.PIPELINE_ENV == 'prod' && env.MANUAL_PROD_DEPLOY == 'true' && !cfg.deployRepo) {
+                            error("deployRepo is required for prod deployment")
+                        }
+                        if (env.PIPELINE_ENV in ['dev', 'staging'] && !cfg.deployRepo) {
+                            error("deployRepo is required for deployment environments")
+                        }
+                    }
+                }
+            }
+
 
             stage('Build Stage') {
                 steps {
@@ -66,7 +78,7 @@ def call(Map cfg = [:]) {
 
             stage('Container Push') {
                 when {
-                    expression { return env.PIPELINE_ENV != 'build' } // skip for PR validation
+                    expression { env.PIPELINE_ENV in ['dev', 'staging', 'prod'] }
                 }
                 steps {
                     script {
@@ -81,26 +93,28 @@ def call(Map cfg = [:]) {
                 }
             }
 
-            stage('Debug Env') {
-                steps {
-                    echo "BRANCH_NAME=${env.BRANCH_NAME}"
-                    echo "PIPELINE_ENV=${env.PIPELINE_ENV}"
-                    echo "enableDeploy=${enableDeploy}"
-                }
-            }
-
             stage('Prod Approval') {
-            when {
-                expression { return enableDeploy && env.PIPELINE_ENV == 'prod' }
-            }
-            steps {
-                script { requireProdApproval() }
-            }
+                when {
+                    expression {
+                        env.PIPELINE_ENV == 'prod' && env.MANUAL_PROD_DEPLOY == 'true'
+                    }
+                }
+                steps {
+                    script {
+                        requireProdApproval()
+                    }
+                }
             }
 
             stage('Deploy') {
                 when {
-                    expression { return enableDeploy && env.PIPELINE_ENV in ['dev', 'staging', 'prod'] }
+                    expression {
+                        return (
+                            env.PIPELINE_ENV == 'dev' ||
+                            env.PIPELINE_ENV == 'staging' ||
+                            (env.PIPELINE_ENV == 'prod' && env.MANUAL_PROD_DEPLOY == 'true')
+                        )
+                    }
                 }
                 steps {
                     script {
