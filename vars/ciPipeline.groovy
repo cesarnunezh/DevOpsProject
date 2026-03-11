@@ -58,6 +58,7 @@ def call(Map cfg = [:]) {
                         def imageMeta = buildImage(cfg + [pipelineEnv: env.PIPELINE_ENV])
                         env.IMAGE_TAG = imageMeta.immutableTag
                         env.IMAGE_URI = imageMeta.imageUri
+                        env.VERSION_TAG = imageMeta.versionTag ?: ""
                         echo "Built image: ${env.IMAGE_URI}"
                     }
                 }
@@ -73,6 +74,7 @@ def call(Map cfg = [:]) {
                             dockerRepo : cfg.dockerRepo,
                             imageUri   : env.IMAGE_URI,
                             imageTag   : env.IMAGE_TAG,
+                            versionTag : env.VERSION_TAG,
                             pipelineEnv: env.PIPELINE_ENV,
                         ])
                     }
