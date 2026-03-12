@@ -62,3 +62,31 @@ variable "disable_security" {
   type        = bool
   default     = false
 }
+
+variable "kube_dir_path" {
+  description = "Optional host path to mount as the Jenkins container kube config directory."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "minikube_dir_path" {
+  description = "Optional host path to mount as the Jenkins container Minikube state directory."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "kubeconfig_path" {
+  description = "Optional kubeconfig path exposed inside the Jenkins container."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "kube_context" {
+  description = "Optional kube context exported inside the Jenkins container."
+  type        = string
+  default     = null
+  nullable    = true
+}

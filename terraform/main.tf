@@ -35,6 +35,10 @@ module "jenkins_container" {
   source_volume_name  = var.jenkins_home_source_volume
   source_path         = var.jenkins_home_source_path
   disable_security    = var.jenkins_disable_security
+  kube_dir_path       = local.jenkins_kube_dir_path
+  minikube_dir_path   = local.jenkins_minikube_dir_path
+  kubeconfig_path     = module.minikube.kubeconfig_path
+  kube_context        = module.minikube.kubeconfig_context
 }
 
 module "minikube" {

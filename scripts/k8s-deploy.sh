@@ -48,6 +48,30 @@ if [[ -n "${KUBE_CONTEXT:-}" ]]; then
   kubectl config use-context "${KUBE_CONTEXT}" >/dev/null
 fi
 
+check_cluster_access() {
+  local kubectl_output
+  if kubectl_output="$(kubectl version --request-timeout=10s -o json 2>&1)"; then
+    return 0
+  fi
+
+  local current_context
+  current_context="$(kubectl config current-context 2>/dev/null || echo "<unset>")"
+
+  if [[ "${kubectl_output}" == *"invalid character '<'"* ]]; then
+    cat >&2 <<EOF
+kubectl is not talking to a Kubernetes API server.
+current context: ${current_context}
+KUBECONFIG: ${KUBECONFIG:-<unset>}
+
+The API response looked like HTML instead of Kubernetes JSON. In this project that usually means the Jenkins container does not have the Minikube kubeconfig mounted, or it is using the wrong context.
+EOF
+  else
+    echo "${kubectl_output}" >&2
+  fi
+
+  exit 1
+}
+
 bootstrap_environment() {
   kubectl apply --validate=false -k "${OVERLAY_DIR}"
 }
@@ -58,6 +82,7 @@ bootstrap_if_missing() {
 }
 
 if [[ "${BOOTSTRAP_ONLY}" -eq 1 ]]; then
+  check_cluster_access
   bootstrap_environment
   exit 0
 fi
@@ -207,6 +232,7 @@ if [[ -z "${RESOLVED_IMAGE_URI}" ]]; then
   exit 1
 fi
 
+check_cluster_access
 ensure_environment_exists
 
 ACTIVE_COLOR=""

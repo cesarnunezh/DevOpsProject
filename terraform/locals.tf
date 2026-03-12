@@ -15,6 +15,14 @@ locals {
     var.jenkins_runtime_environment,
     local.environment
   )
+  jenkins_kube_dir_path = coalesce(
+    var.jenkins_kube_dir_path,
+    pathexpand("~/.kube")
+  )
+  jenkins_minikube_dir_path = coalesce(
+    var.jenkins_minikube_dir_path,
+    pathexpand("~/.minikube")
+  )
 
   labels = {
     project     = var.project_name

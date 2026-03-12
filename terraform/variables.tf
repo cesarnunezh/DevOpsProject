@@ -80,6 +80,20 @@ variable "jenkins_runtime_environment" {
   nullable    = true
 }
 
+variable "jenkins_kube_dir_path" {
+  description = "Optional host path for the kube config directory mounted into Jenkins."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "jenkins_minikube_dir_path" {
+  description = "Optional host path for the Minikube state directory mounted into Jenkins."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "postgres_host_port" {
   description = "Host port for PostgreSQL."
   type        = number

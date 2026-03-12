@@ -103,6 +103,8 @@ resource "docker_container" "jenkins" {
 
   env = concat(
     ["JENKINS_RUNTIME_ENV=${var.runtime_environment}"],
+    var.kubeconfig_path != null ? ["KUBECONFIG=${var.kubeconfig_path}"] : [],
+    var.kube_context != null ? ["KUBE_CONTEXT=${var.kube_context}"] : [],
     var.disable_security ? ["JAVA_OPTS=-Djenkins.install.runSetupWizard=false"] : []
   )
 
@@ -120,6 +122,26 @@ resource "docker_container" "jenkins" {
     target = "/var/jenkins_home"
     type   = "volume"
     source = var.volume_name
+  }
+
+  dynamic "mounts" {
+    for_each = var.kube_dir_path != null ? [var.kube_dir_path] : []
+    content {
+      target    = mounts.value
+      type      = "bind"
+      source    = mounts.value
+      read_only = true
+    }
+  }
+
+  dynamic "mounts" {
+    for_each = var.minikube_dir_path != null ? [var.minikube_dir_path] : []
+    content {
+      target    = mounts.value
+      type      = "bind"
+      source    = mounts.value
+      read_only = true
+    }
   }
 
   networks_advanced {
