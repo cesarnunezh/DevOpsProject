@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service-nodeport
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 31080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-api-nodeport
+spec:
+  ports:
+    - name: http
+      port: 8070
+      targetPort: http
+      nodePort: 31070
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-api-nodeport
+spec:
+  ports:
+    - name: http
+      port: 8050
+      targetPort: http
+      nodePort: 31050

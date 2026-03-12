@@ -1,0 +1,25 @@
+resources:
+  - namespace.yaml
+  - resourcequota.yaml
+  - persistentvolume.yaml
+  - ingress.yaml
+  - ../../base
+
+namespace: devops-dev
+
+patches:
+  - path: deployment-patch.yaml
+
+configMapGenerator:
+  - name: app-config
+    behavior: merge
+    literals:
+      - APP_ENV=dev
+      - DEV=true
+      - REACT_APP_API_ORDERS=/orders
+      - REACT_APP_API_PRODUCTS=/products
+    files:
+      - runtime-config.js=runtime-config.js
+
+generatorOptions:
+  disableNameSuffixHash: true

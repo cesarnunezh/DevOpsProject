@@ -1,0 +1,351 @@
+canun:~$ cd projects/DevOpsProject/
+canun:DevOpsProject (main)$ make infra-staging
+Applying Terraform infrastructure for staging...
+cd terraform && terraform init && terraform workspace select -or-create staging && terraform apply -auto-approve -var-file=env/staging.tfvars
+Initializing the backend...
+Initializing modules...
+Initializing provider plugins...
+- Reusing previous version of hashicorp/null from the dependency lock file
+- Reusing previous version of kreuzwerker/docker from the dependency lock file
+- Reusing previous version of hashicorp/local from the dependency lock file
+- Using previously-installed hashicorp/null v3.2.4
+- Using previously-installed kreuzwerker/docker v3.6.2
+- Using previously-installed hashicorp/local v2.7.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+Switched to workspace "staging".
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # module.jenkins_container.docker_container.jenkins will be created
+  + resource "docker_container" "jenkins" {
+      + attach                                      = false
+      + bridge                                      = (known after apply)
+      + command                                     = (known after apply)
+      + container_logs                              = (known after apply)
+      + container_read_refresh_timeout_milliseconds = 15000
+      + entrypoint                                  = (known after apply)
+      + env                                         = [
+          + "JAVA_OPTS=-Djenkins.install.runSetupWizard=false",
+          + "JENKINS_RUNTIME_ENV=staging",
+        ]
+      + exit_code                                   = (known after apply)
+      + hostname                                    = (known after apply)
+      + id                                          = (known after apply)
+      + image                                       = (known after apply)
+      + init                                        = (known after apply)
+      + ipc_mode                                    = (known after apply)
+      + log_driver                                  = (known after apply)
+      + logs                                        = false
+      + must_run                                    = true
+      + name                                        = "devops-staging-jenkins"
+      + network_data                                = (known after apply)
+      + network_mode                                = "bridge"
+      + read_only                                   = false
+      + remove_volumes                              = true
+      + restart                                     = "unless-stopped"
+      + rm                                          = false
+      + runtime                                     = (known after apply)
+      + security_opts                               = (known after apply)
+      + shm_size                                    = (known after apply)
+      + start                                       = true
+      + stdin_open                                  = false
+      + stop_signal                                 = (known after apply)
+      + stop_timeout                                = (known after apply)
+      + tty                                         = false
+      + wait                                        = false
+      + wait_timeout                                = 60
+
+      + healthcheck (known after apply)
+
+      + labels (known after apply)
+
+      + mounts {
+          + source = "devops-staging-jenkins-home"
+          + target = "/var/jenkins_home"
+          + type   = "volume"
+        }
+
+      + networks_advanced {
+          + aliases      = []
+          + name         = "devops-staging-network"
+            # (2 unchanged attributes hidden)
+        }
+
+      + ports {
+          + external = 8081
+          + internal = 8080
+          + ip       = "0.0.0.0"
+          + protocol = "tcp"
+        }
+      + ports {
+          + external = 50001
+          + internal = 50000
+          + ip       = "0.0.0.0"
+          + protocol = "tcp"
+        }
+    }
+
+  # module.jenkins_container.docker_image.jenkins will be created
+  + resource "docker_image" "jenkins" {
+      + id           = (known after apply)
+      + image_id     = (known after apply)
+      + keep_locally = true
+      + name         = "jenkins/jenkins:lts-jdk21"
+      + repo_digest  = (known after apply)
+    }
+
+  # module.jenkins_container.null_resource.configure_home[0] will be created
+  + resource "null_resource" "configure_home" {
+      + id       = (known after apply)
+      + triggers = {
+          + "destination_volume" = "devops-staging-jenkins-home"
+          + "disable_security"   = "true"
+        }
+    }
+
+  # module.jenkins_container.null_resource.fix_home_permissions will be created
+  + resource "null_resource" "fix_home_permissions" {
+      + id       = (known after apply)
+      + triggers = {
+          + "destination_volume" = "devops-staging-jenkins-home"
+          + "jenkins_image"      = "jenkins/jenkins:lts-jdk21"
+        }
+    }
+
+  # module.local_dev.docker_network.shared will be created
+  + resource "docker_network" "shared" {
+      + driver      = (known after apply)
+      + id          = (known after apply)
+      + internal    = (known after apply)
+      + ipam_driver = "default"
+      + name        = "devops-staging-network"
+      + options     = (known after apply)
+      + scope       = (known after apply)
+
+      + ipam_config (known after apply)
+    }
+
+  # module.local_dev.docker_volume.jenkins_home will be created
+  + resource "docker_volume" "jenkins_home" {
+      + driver     = (known after apply)
+      + id         = (known after apply)
+      + mountpoint = (known after apply)
+      + name       = "devops-staging-jenkins-home"
+    }
+
+  # module.local_dev.docker_volume.postgres_data will be created
+  + resource "docker_volume" "postgres_data" {
+      + driver     = (known after apply)
+      + id         = (known after apply)
+      + mountpoint = (known after apply)
+      + name       = "devops-staging-postgres-data"
+    }
+
+  # module.minikube.null_resource.minikube_profile will be created
+  + resource "null_resource" "minikube_profile" {
+      + id       = (known after apply)
+      + triggers = {
+          + "addons"             = "ingress"
+          + "cpus"               = "2"
+          + "driver"             = "docker"
+          + "kubernetes_version" = "v1.32.0"
+          + "memory"             = "5120"
+          + "profile"            = "devops-staging-minikube"
+        }
+    }
+
+  # module.postgres_container.docker_container.postgres will be created
+  + resource "docker_container" "postgres" {
+      + attach                                      = false
+      + bridge                                      = (known after apply)
+      + command                                     = (known after apply)
+      + container_logs                              = (known after apply)
+      + container_read_refresh_timeout_milliseconds = 15000
+      + entrypoint                                  = (known after apply)
+      + env                                         = (sensitive value)
+      + exit_code                                   = (known after apply)
+      + hostname                                    = (known after apply)
+      + id                                          = (known after apply)
+      + image                                       = (known after apply)
+      + init                                        = (known after apply)
+      + ipc_mode                                    = (known after apply)
+      + log_driver                                  = (known after apply)
+      + logs                                        = false
+      + must_run                                    = true
+      + name                                        = "devops-staging-postgres"
+      + network_data                                = (known after apply)
+      + network_mode                                = "bridge"
+      + read_only                                   = false
+      + remove_volumes                              = true
+      + restart                                     = "unless-stopped"
+      + rm                                          = false
+      + runtime                                     = (known after apply)
+      + security_opts                               = (known after apply)
+      + shm_size                                    = (known after apply)
+      + start                                       = true
+      + stdin_open                                  = false
+      + stop_signal                                 = (known after apply)
+      + stop_timeout                                = (known after apply)
+      + tty                                         = false
+      + wait                                        = false
+      + wait_timeout                                = 60
+
+      + healthcheck (known after apply)
+
+      + labels (known after apply)
+
+      + mounts {
+          + source = "devops-staging-postgres-data"
+          + target = "/var/lib/postgresql/data"
+          + type   = "volume"
+        }
+
+      + networks_advanced {
+          + aliases      = []
+          + name         = "devops-staging-network"
+            # (2 unchanged attributes hidden)
+        }
+
+      + ports {
+          + external = 5433
+          + internal = 5432
+          + ip       = "0.0.0.0"
+          + protocol = "tcp"
+        }
+    }
+
+  # module.postgres_container.docker_image.postgres will be created
+  + resource "docker_image" "postgres" {
+      + id           = (known after apply)
+      + image_id     = (known after apply)
+      + keep_locally = true
+      + name         = "cesarnunezh/database-service:staging-terraform"
+      + repo_digest  = (known after apply)
+    }
+
+Plan: 10 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + docker_network_name         = "devops-staging-network"
+  + docker_registry_namespace   = "cesarnunezh"
+  + environment                 = "staging"
+  + image_repository_prefix     = "cesarnunezh"
+  + jenkins_port                = 8081
+  + jenkins_url                 = "http://localhost:8081"
+  + kubernetes_namespace        = "staging"
+  + minikube_cluster_ip         = ""
+  + minikube_kubeconfig_context = "devops-staging-minikube"
+  + minikube_kubeconfig_path    = "/home/canun/.kube/config"
+  + minikube_profile            = "devops-staging-minikube"
+  + name_prefix                 = "devops-staging"
+  + postgres_connection_string  = (sensitive value)
+  + postgres_db                 = "database"
+  + postgres_host               = "localhost"
+  + postgres_port               = 5433
+  + service_base_urls           = {
+      + frontend = "http://localhost:3100"
+      + jenkins  = "http://localhost:8081"
+      + orders   = "http://localhost:8150"
+      + products = "http://localhost:8170"
+    }
+module.minikube.null_resource.minikube_profile: Creating...
+module.minikube.null_resource.minikube_profile: Provisioning with 'local-exec'...
+module.minikube.null_resource.minikube_profile (local-exec): Executing: ["/bin/bash" "-c" "mkdir -p \"modules/minikube/generated\"\nminikube delete -p \"devops-staging-minikube\" || true\nminikube start \\\n  --profile=\"devops-staging-minikube\" \\\n  --driver=\"docker\" \\\n  --cpus=\"2\" \\\n  --memory=\"5120\" \\\n  --kubernetes-version=\"v1.32.0\" \\\n  --delete-on-failure \\\n  --install-addons=false \\\n  --wait=apiserver,system_pods,node_ready\nkubectl --context=\"devops-staging-minikube\" wait --for=condition=Ready node --all --timeout=180s\nfor addon in default-storageclass storage-provisioner ingress; do\n  minikube addons enable \"$addon\" -p \"devops-staging-minikube\"\ndone\ncat > \"modules/minikube/generated/devops-staging-minikube.json\" <<EOF\n{\"profile\":\"devops-staging-minikube\",\"cluster_ip\":\"$(minikube ip -p \"devops-staging-minikube\")\",\"kubeconfig_context\":\"devops-staging-minikube\",\"kubeconfig_path\":\"$HOME/.kube/config\"}\nEOF\n"]
+module.local_dev.docker_volume.postgres_data: Creating...
+module.jenkins_container.docker_image.jenkins: Creating...
+module.local_dev.docker_volume.jenkins_home: Creating...
+module.postgres_container.docker_image.postgres: Creating...
+module.local_dev.docker_network.shared: Creating...
+module.local_dev.docker_volume.jenkins_home: Creation complete after 0s [id=devops-staging-jenkins-home]
+module.local_dev.docker_volume.postgres_data: Creation complete after 0s [id=devops-staging-postgres-data]
+module.jenkins_container.null_resource.configure_home[0]: Creating...
+module.jenkins_container.null_resource.configure_home[0]: Provisioning with 'local-exec'...
+module.jenkins_container.null_resource.configure_home[0] (local-exec): Executing: ["/bin/bash" "-c" "    docker run --rm \\\n      --user 0:0 \\\n      --entrypoint sh \\\n      -v \"devops-staging-jenkins-home:/target\" \\\n      \"jenkins/jenkins:lts-jdk21\" \\\n      -c 'mkdir -p /target/init.groovy.d && cat > /target/init.groovy.d/disable-security.groovy <<'\"'\"'EOF'\"'\"'\nimport jenkins.model.Jenkins\nimport hudson.security.SecurityRealm\nimport hudson.security.AuthorizationStrategy\n\ndef instance = Jenkins.get()\ninstance.setSecurityRealm(SecurityRealm.NO_AUTHENTICATION)\ninstance.setAuthorizationStrategy(new AuthorizationStrategy.Unsecured())\ninstance.save()\nEOF\nchown -R 1000:1000 /target/init.groovy.d'\n"]
+module.minikube.null_resource.minikube_profile (local-exec): 🙄  "devops-staging-minikube" profile does not exist, trying anyways.
+module.minikube.null_resource.minikube_profile (local-exec): 💀  Removed all traces of the "devops-staging-minikube" cluster.
+module.jenkins_container.docker_image.jenkins: Creation complete after 0s [id=sha256:d1ea795c6facd7f549a21c40e5e43ffcc5fbc5f48683d9b24750f26e8079d772jenkins/jenkins:lts-jdk21]
+module.postgres_container.docker_image.postgres: Creation complete after 0s [id=sha256:2c815dfdadb97d87b626805103980367b688d5b00c684361df718f2232b4956fcesarnunezh/database-service:staging-terraform]
+module.minikube.null_resource.minikube_profile (local-exec): 😄  [devops-staging-minikube] minikube v1.38.0 on Ubuntu 24.04 (kvm/amd64)
+module.jenkins_container.null_resource.configure_home[0]: Creation complete after 1s [id=2104574421899059827]
+module.jenkins_container.null_resource.fix_home_permissions: Creating...
+module.jenkins_container.null_resource.fix_home_permissions: Provisioning with 'local-exec'...
+module.jenkins_container.null_resource.fix_home_permissions (local-exec): Executing: ["/bin/bash" "-c" "docker run --rm \\\n  --user 0:0 \\\n  --entrypoint sh \\\n  -v \"devops-staging-jenkins-home:/target\" \\\n  \"jenkins/jenkins:lts-jdk21\" \\\n  -c 'mkdir -p /target && chown -R 1000:1000 /target'\n"]
+module.minikube.null_resource.minikube_profile (local-exec): ✨  Using the docker driver based on user configuration
+module.minikube.null_resource.minikube_profile (local-exec): ❗  Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.
+module.minikube.null_resource.minikube_profile (local-exec): 📌  Using Docker driver with root privileges
+module.minikube.null_resource.minikube_profile (local-exec): ❗  For an improved experience it's recommended to use Docker Engine instead of Docker Desktop.
+module.minikube.null_resource.minikube_profile (local-exec): Docker Engine installation instructions: https://docs.docker.com/engine/install/#server
+module.minikube.null_resource.minikube_profile (local-exec): 👍  Starting "devops-staging-minikube" primary control-plane node in "devops-staging-minikube" cluster
+module.minikube.null_resource.minikube_profile (local-exec): 🚜  Pulling base image v0.0.49 ...
+module.jenkins_container.null_resource.fix_home_permissions: Creation complete after 0s [id=5246027111490863329]
+module.local_dev.docker_network.shared: Creation complete after 2s [id=1e96ebef6a211251c7872b9f24fb2947f1087b4b4ea68a007b20397fb7397b57]
+module.jenkins_container.docker_container.jenkins: Creating...
+module.postgres_container.docker_container.postgres: Creating...
+module.postgres_container.docker_container.postgres: Creation complete after 1s [id=6b81ee2a85164f3a85d26dccfc5875962d1d11568395ed49ce8e0d35e0a3a61f]
+module.jenkins_container.docker_container.jenkins: Creation complete after 1s [id=f70eea0bdaaf65d27ee517c2f28b5fa72b004e1bd2e8e0690899b73022162666]
+module.minikube.null_resource.minikube_profile: Still creating... [00m10s elapsed]
+module.minikube.null_resource.minikube_profile: Still creating... [00m20s elapsed]
+module.minikube.null_resource.minikube_profile (local-exec): 🔗  Configuring bridge CNI (Container Networking Interface) ...
+module.minikube.null_resource.minikube_profile (local-exec): 🔎  Verifying Kubernetes components...
+
+module.minikube.null_resource.minikube_profile (local-exec): ❗  /usr/local/bin/kubectl is version 1.35.1, which may have incompatibilities with Kubernetes 1.32.0.
+module.minikube.null_resource.minikube_profile (local-exec):     ▪ Want kubectl v1.32.0? Try 'minikube kubectl -- get pods -A'
+module.minikube.null_resource.minikube_profile (local-exec): 🏄  Done! kubectl is now configured to use "devops-staging-minikube" cluster and "default" namespace by default
+module.minikube.null_resource.minikube_profile (local-exec): node/devops-staging-minikube condition met
+module.minikube.null_resource.minikube_profile (local-exec): 💡  default-storageclass is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+module.minikube.null_resource.minikube_profile (local-exec): You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+module.minikube.null_resource.minikube_profile (local-exec): 🌟  The 'default-storageclass' addon is enabled
+module.minikube.null_resource.minikube_profile (local-exec): 💡  storage-provisioner is an addon maintained by minikube. For any concerns contact minikube on GitHub.
+module.minikube.null_resource.minikube_profile (local-exec): You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+module.minikube.null_resource.minikube_profile (local-exec):     ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+module.minikube.null_resource.minikube_profile (local-exec): 🌟  The 'storage-provisioner' addon is enabled
+module.minikube.null_resource.minikube_profile (local-exec): 💡  ingress is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+module.minikube.null_resource.minikube_profile (local-exec): You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+module.minikube.null_resource.minikube_profile (local-exec):     ▪ Using image registry.k8s.io/ingress-nginx/controller:v1.14.1
+module.minikube.null_resource.minikube_profile (local-exec):     ▪ Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.5
+module.minikube.null_resource.minikube_profile (local-exec):     ▪ Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.5
+module.minikube.null_resource.minikube_profile (local-exec): 🔎  Verifying ingress addon...
+module.minikube.null_resource.minikube_profile: Still creating... [00m30s elapsed]
+module.minikube.null_resource.minikube_profile: Still creating... [00m40s elapsed]
+module.minikube.null_resource.minikube_profile: Still creating... [00m50s elapsed]
+module.minikube.null_resource.minikube_profile (local-exec): 🌟  The 'ingress' addon is enabled
+module.minikube.null_resource.minikube_profile: Creation complete after 58s [id=6143337746144113052]
+
+Apply complete! Resources: 10 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+docker_network_name = "devops-staging-network"
+docker_registry_namespace = "cesarnunezh"
+environment = "staging"
+image_repository_prefix = "cesarnunezh"
+jenkins_port = 8081
+jenkins_url = "http://localhost:8081"
+kubernetes_namespace = "staging"
+minikube_cluster_ip = ""
+minikube_kubeconfig_context = "devops-staging-minikube"
+minikube_kubeconfig_path = "/home/canun/.kube/config"
+minikube_profile = "devops-staging-minikube"
+name_prefix = "devops-staging"
+postgres_connection_string = <sensitive>
+postgres_db = "database"
+postgres_host = "localhost"
+postgres_port = 5433
+service_base_urls = {
+  "frontend" = "http://localhost:3100"
+  "jenkins" = "http://localhost:8081"
+  "orders" = "http://localhost:8150"
+  "products" = "http://localhost:8170"
+}

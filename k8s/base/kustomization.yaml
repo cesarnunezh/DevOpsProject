@@ -1,0 +1,18 @@
+resources:
+  - configmap-app.yaml
+  - secret-app.yaml
+  - frontend-deployment-blue.yaml
+  - frontend-deployment-green.yaml
+  - frontend-service-clusterip.yaml
+  - frontend-service-nodeport.yaml
+  - products-deployment-blue.yaml
+  - products-deployment-green.yaml
+  - products-service-clusterip.yaml
+  - products-service-nodeport.yaml
+  - orders-deployment-blue.yaml
+  - orders-deployment-green.yaml
+  - orders-service-clusterip.yaml
+  - orders-service-nodeport.yaml
+  - database-deployment.yaml
+  - database-service.yaml
+  - database-pvc.yaml
