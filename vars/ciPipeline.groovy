@@ -47,6 +47,25 @@ def call(Map cfg = [:]) {
                 }
             }
 
+            stage('Validate Jenkins Runtime') {
+                when {
+                    expression { env.PIPELINE_ENV in ['dev', 'staging', 'prod'] }
+                }
+                steps {
+                    script {
+                        if ((env.JENKINS_HOME ?: '').trim() != '/var/jenkins_home') {
+                            error("deploy pipelines must run in the Terraform-managed Jenkins controller (expected JENKINS_HOME=/var/jenkins_home, found '${env.JENKINS_HOME ?: "<unset>"}')")
+                        }
+                        if (!(env.KUBECONFIG ?: '').trim()) {
+                            error("deploy pipelines require KUBECONFIG to be set in the Terraform-managed Jenkins controller")
+                        }
+                        if (!(env.KUBE_CONTEXT ?: '').trim()) {
+                            error("deploy pipelines require KUBE_CONTEXT to be set in the Terraform-managed Jenkins controller")
+                        }
+                    }
+                }
+            }
+
 
             stage('Build Stage') {
                 steps {
