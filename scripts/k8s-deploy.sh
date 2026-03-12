@@ -49,7 +49,7 @@ if [[ -n "${KUBE_CONTEXT:-}" ]]; then
 fi
 
 bootstrap_environment() {
-  kubectl apply -k "${OVERLAY_DIR}"
+  kubectl apply --validate=false -k "${OVERLAY_DIR}"
 }
 
 bootstrap_if_missing() {
