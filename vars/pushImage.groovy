@@ -1,7 +1,8 @@
 def call(Map cfg = [:]) {
     Map versionConfig = loadVersionConfig()
     String mutableTagSuffix = (versionConfig.cicd?.mutable_tag_suffix ?: "latest").trim()
-    String mutableTag = (cfg.mutableTag ?: (cfg.pipelineEnv ? "${cfg.pipelineEnv}-${mutableTagSuffix}" : "")).trim()
+    String pipelineEnv = (env.PIPELINE_ENV ?: "").trim()
+    String mutableTag = (cfg.mutableTag ?: (pipelineEnv ? "${pipelineEnv}-${mutableTagSuffix}" : "")).trim()
 
     withCredentials([usernamePassword(
         credentialsId: 'final_project',

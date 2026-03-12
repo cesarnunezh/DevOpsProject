@@ -2,7 +2,7 @@ def call(Map cfg = [:]) {
     String dockerRepo = cfg.dockerRepo ?: error("dockerRepo is required")
     String localImageName = cfg.localImageName ?: error("localImageName is required")
     String imageBuildCmd = cfg.imageBuildCmd ?: "make build"
-    String pipelineEnv = cfg.pipelineEnv ?: "build"
+    String pipelineEnv = (env.PIPELINE_ENV ?: "build").trim()
     String version = (cfg.version ?: env.VERSION ?: "").trim()
 
     String mutableTagSuffix = (cfg.mutableTagSuffix ?: "latest").trim()

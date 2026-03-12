@@ -11,25 +11,25 @@
 - Documentation explaining your Git workflow and branching strategy
 - Screenshots demonstrating:
   - Initial setup of main and develop branches
-    - database: ![](/images/phase1/database_init.png)
-    - frontend-service: ![](/images/phase1/frontend_init.png)
-    - order-service: ![](/images/phase1/orders_init.png)
-    - product-service: ![](/images/phase1/products_init.png)
+    - database: ![d](./images/phase1/database_init.png)
+    - frontend-service: ![](./images/phase1/frontend_init.png)
+    - order-service: ![](./images/phase1/orders_init.png)
+    - product-service: ![](./images/phase1/products_init.png)
   - Complete feature development workflow (from branch creation to merge)
-    - database: ![](/images/phase1/database_feature1.png)![](/images/phase1/database_feature2.png)
-    - frontend-service: ![](/images/phase1/frontend_feature1.png)![](/images/phase1/frontend_feature2.png)
-    - order-service: ![](/images/phase1/orders_feature.png)
-    - product-service: ![](/images/phase1/products_feature.png)
+    - database: ![](./images/phase1/database_feature1.png)![](./images/phase1/database_feature2.png)
+    - frontend-service: ![](./images/phase1/frontend_feature1.png)![](./images/phase1/frontend_feature2.png)
+    - order-service: ![](./images/phase1/orders_feature.png)
+    - product-service: ![](./images/phase1/products_feature.png)
   - Complete release workflow (from develop to main)
-    - database: ![](/images/phase1/database_release.png)
-    - frontend-service: ![](/images/phase1/frontend_release.png)
-    - order-service: ![](/images/phase1/orders_release.png)
-    - product-service: ![](/images/phase1/products_release.png)
+    - database: ![](./images/phase1/database_release.png)
+    - frontend-service: ![](./images/phase1/frontend_release.png)
+    - order-service: ![](./images/phase1/orders_release.png)
+    - product-service: ![](./images/phase1/products_release.png)
   - Complete hotfix workflow (from main back to main and develop)
-    - database: ![](/images/phase1/database_hotfix.png)
-    - frontend-service: ![](/images/phase1/frontend_hotfix.png)
-    - order-service: ![](/images/phase1/orders_hotfix.png)
-    - product-service: ![](/images/phase1/products_hotfix.png)
+    - database: ![](./images/phase1/database_hotfix.png)
+    - frontend-service: ![](./images/phase1/frontend_hotfix.png)
+    - order-service: ![](./images/phase1/orders_hotfix.png)
+    - product-service: ![](./images/phase1/products_hotfix.png)
   - How all branch types interact in the Git Flow model
     ```mermaid
       flowchart TD
@@ -150,10 +150,10 @@
 # Phase 3: CI/CD Pipeline with Jenkins
 **Deliverables:**
 - Screenshots of Jenkins server with pipelines configured ![](./images/phase3/pipelines.png)
-      - database: ![](/images/phase3/pipeline-database.png)
-      - frontend-service: ![](/images/phase3/pipeline-frontend.png)
-      - order-service: ![](/images/phase3/pipeline-orders.png)
-      - product-service: ![](/images/phase3/pipeline-product.png)
+      - database: ![](./images/phase3/pipeline-database.png)
+      - frontend-service: ![](./images/phase3/pipeline-frontend.png)
+      - order-service: ![](./images/phase3/pipeline-orders.png)
+      - product-service: ![](./images/phase3/pipeline-product.png)
 - Jenkinsfiles for all services:
   - Shared folder: Available [here](https://github.com/cesarnunezh/DevOpsProject/tree/main/vars)
   - database: Available [here](https://github.com/cesarnunezh/database/blob/main/Jenkinsfile)
@@ -161,9 +161,9 @@
   - order-service: Available [here](https://github.com/cesarnunezh/order-service/blob/main/Jenkinsfile)
   - product-service: Available [here](https://github.com/cesarnunezh/product-service/blob/main/Jenkinsfile)
 - Screenshots of pipeline executions for each environment (Build, Dev, Staging, Prod):
-    - Build/Dev: ![](/images/phase3/pipeline-dev.png)
-    - Staging: ![](/images/phase3/pipeline-staging.png)
-    - Prod: ![](/images/phase3/pipeline-prod.png)
+    - Build/Dev: ![](./images/phase3/pipeline-dev.png)
+    - Staging: ![](./images/phase3/pipeline-staging.png)
+    - Prod: ![](./images/phase3/pipeline-prod.png)
 
 # Phase 4: Infrastructure as Code with Terraform
 **Deliverables:**

@@ -12,5 +12,10 @@ def call() {
         else if (branch == 'main') targetEnv = 'prod'
     }
 
-    return [pipelineEnv: targetEnv, isPr: isPr, branchName: branch, runtimeEnv: runtimeEnv]
+    return [
+        pipelineEnv  : targetEnv,
+        isPr         : isPr,
+        branchName   : branch,
+        runtimeEnv   : runtimeEnv
+    ]
 }

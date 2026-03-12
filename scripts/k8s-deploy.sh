@@ -52,6 +52,11 @@ bootstrap_environment() {
   kubectl apply -k "${OVERLAY_DIR}"
 }
 
+bootstrap_if_missing() {
+  echo "environment ${NAMESPACE} is missing; bootstrapping ${ENV_NAME} before deploy" >&2
+  bootstrap_environment
+}
+
 if [[ "${BOOTSTRAP_ONLY}" -eq 1 ]]; then
   bootstrap_environment
   exit 0
@@ -129,13 +134,22 @@ resolve_image_uri() {
 
 ensure_environment_exists() {
   if ! kubectl get namespace "${NAMESPACE}" >/dev/null 2>&1; then
-    echo "namespace ${NAMESPACE} not found; run: bash scripts/k8s-deploy.sh ${ENV_NAME} --bootstrap" >&2
+    bootstrap_if_missing
+  fi
+
+  if ! kubectl get deployment "${SERVICE_NAME}" -n "${NAMESPACE}" >/dev/null 2>&1 \
+    && ! kubectl get deployment "${SERVICE_NAME}-blue" -n "${NAMESPACE}" >/dev/null 2>&1; then
+    bootstrap_if_missing
+  fi
+
+  if ! kubectl get namespace "${NAMESPACE}" >/dev/null 2>&1; then
+    echo "namespace ${NAMESPACE} is still missing after bootstrap" >&2
     exit 1
   fi
 
   if ! kubectl get deployment "${SERVICE_NAME}" -n "${NAMESPACE}" >/dev/null 2>&1 \
     && ! kubectl get deployment "${SERVICE_NAME}-blue" -n "${NAMESPACE}" >/dev/null 2>&1; then
-    echo "environment resources for ${NAMESPACE} not found; run: bash scripts/k8s-deploy.sh ${ENV_NAME} --bootstrap" >&2
+    echo "environment resources for ${NAMESPACE} are still missing after bootstrap" >&2
     exit 1
   fi
 }

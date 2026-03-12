@@ -1,6 +1,6 @@
 def call(Map cfg = [:]) {
     boolean enableDeploy = (cfg.enableDeploy == true)
-    
+
     pipeline {
         agent any
         stages {
@@ -28,6 +28,9 @@ def call(Map cfg = [:]) {
             stage('Validate Config') {
                 steps {
                     script {
+                        if (cfg.containsKey('pipelineEnv') || cfg.containsKey('runtimeEnv') || cfg.containsKey('environment')) {
+                            error("pipeline environment is resolved from context and must not be passed to ciPipeline")
+                        }
                         if (!cfg.dockerRepo) {
                             error("dockerRepo is required")
                         }
@@ -68,7 +71,7 @@ def call(Map cfg = [:]) {
             stage('Container Build') {
                 steps {
                     script {
-                        def imageMeta = buildImage(cfg + [pipelineEnv: env.PIPELINE_ENV])
+                        def imageMeta = buildImage(cfg)
                         env.IMAGE_TAG = imageMeta.immutableTag
                         env.MUTABLE_TAG = imageMeta.mutableTag ?: ""
                         env.IMAGE_URI = imageMeta.imageUri
@@ -89,8 +92,7 @@ def call(Map cfg = [:]) {
                             imageUri   : env.IMAGE_URI,
                             imageTag   : env.IMAGE_TAG,
                             mutableTag : env.MUTABLE_TAG,
-                            versionTag : env.VERSION_TAG,
-                            pipelineEnv: env.PIPELINE_ENV,
+                            versionTag : env.VERSION_TAG
                         ])
                     }
                 }
@@ -123,7 +125,6 @@ def call(Map cfg = [:]) {
                     script {
                         deployCompose(cfg + [
                             deployRepo : cfg.deployRepo,
-                            pipelineEnv: env.PIPELINE_ENV,
                             imageUri   : env.IMAGE_URI,
                             imageTag   : env.IMAGE_TAG,
                             mutableTag : env.MUTABLE_TAG,
