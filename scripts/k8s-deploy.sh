@@ -50,7 +50,7 @@ fi
 
 check_cluster_access() {
   local kubectl_output
-  if kubectl_output="$(kubectl version --request-timeout=10s -o json 2>&1)"; then
+  if kubectl_output="$(kubectl get --raw=/version --request-timeout=10s 2>&1)"; then
     return 0
   fi
 
@@ -64,6 +64,14 @@ current context: ${current_context}
 KUBECONFIG: ${KUBECONFIG:-<unset>}
 
 The API response looked like HTML instead of Kubernetes JSON. In this project that usually means the Jenkins container does not have the Minikube kubeconfig mounted, or it is using the wrong context.
+EOF
+  elif [[ "${kubectl_output}" == *"the server could not find the requested resource"* ]]; then
+    cat >&2 <<EOF
+kubectl could not reach a valid Kubernetes API endpoint for /version.
+current context: ${current_context}
+KUBECONFIG: ${KUBECONFIG:-<unset>}
+
+This usually means the selected context points at the wrong server, or Jenkins is using an incomplete kubeconfig.
 EOF
   else
     echo "${kubectl_output}" >&2
